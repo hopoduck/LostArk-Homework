@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toy.springboot.homework.HomeworkMapper">
+	<resultMap type="com.toy.springboot.homework.Homework"
+		id="homework">
+		<result property="homework_id" column="homework_id" />
+		<result property="homework_name" column="homework_name" />
+		<result property="homework_type" column="homework_type" />
+		<result property="homework_account_value"
+			column="homework_account_value" />
+		<result property="member_id" column="member_id" />
+	</resultMap>
+	<insert id="insert"
+		parameterType="com.toy.springboot.homework.Homework">
+		insert into LAR_HOMEWORK values (LAR_SEQ_HOMEWORK.nextval,
+		#{homework_name},
+		#{homework_type}, #{homework_account_value},
+		#{member_id})
+	</insert>
+	<select id="select" parameterType="String"
+		resultType="com.toy.springboot.homework.Homework">
+		select * from LAR_HOMEWORK
+		where homework_id=#{homework_id}
+	</select>
+	<select id="selectListByMember_id" parameterType="String"
+		resultMap="homework">
+		select * from LAR_HOMEWORK where
+		member_id=#{member_id} order by
+		homework_id
+	</select>
+	<update id="update"
+		parameterType="com.toy.springboot.homework.Homework">
+		update LAR_HOMEWORK set homework_name=#{homework_name},
+		homework_type=#{homework_type},
+		homework_account_value=#{homework_account_value}
+		where
+		homework_id=#{homework_id}
+	</update>
+	<delete id="delete" parameterType="String">
+		delete from LAR_HOMEWORK where
+		homework_id=#{homework_id}
+	</delete>
+	<select id="selectSeqCurrval" resultType="int">
+		select LAR_SEQ_HOMEWORK.currval from dual
+	</select>
+</mapper>

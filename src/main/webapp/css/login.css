@@ -1,0 +1,44 @@
+form {
+    margin: 30px auto;
+    text-align: center;
+}
+form h1 {
+    margin-top: 260px;
+    margin-bottom: 40px;
+    font-size: 40px;
+    color: orange;
+    font-weight: 300;
+}
+form input {
+    width: 400px;
+    border: 2px solid orange;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 5px auto;
+    font-size: 18px;
+}
+form input::placeholder {
+    color: rgba(0, 0, 0, 0.8);
+}
+form input:focus {
+    outline: none;
+}
+form input[type="submit"],
+form input[type="button"] {
+    background-color: orange;
+}
+.id,
+.password {
+    margin-left: 300px;
+    width: 400px;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px;
+}
+.fail {
+    color: red;
+}
+.success {
+    color: green;
+}

@@ -1,0 +1,80 @@
+.main {
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+h1.title {
+    margin: 20px 0px 0px 0px;
+}
+table {
+    border: 5px solid orange;
+    border-collapse: collapse;
+}
+th,
+td {
+    border-top: 1px solid black;
+    padding: 15px 8px;
+    text-align: center;
+    vertical-align: middle;
+}
+.record {
+    font-size: 20px;
+    width: 1000px;
+    max-width: 1000px;
+    margin: 20px 0px;
+}
+.record input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+}
+.character_name {
+    min-width: 100px;
+}
+.homework_name {
+    min-width: 100px;
+}
+.dh {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.wh {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+button.delete_btn,
+button.left,
+button.right {
+    margin: 0px 2px;
+    padding: 5px;
+}
+
+#character_add_form,
+#homework_add_form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 3px solid orange;
+    border-radius: 30px;
+    font-size: 20px;
+}
+#character_add_form input[type="text"],
+#homework_add_form input[type="text"] {
+    border-radius: 15px;
+    border: 2px solid orange;
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+#character_add_form input[type="text"]:focus,
+#homework_add_form input[type="text"]:focus {
+    outline: none;
+}
+#character_add_form input[type="text"]::placeholder,
+#homework_add_form input[type="text"]::placeholder {
+    color: black;
+}
+#character_add_form button,
+#homework_add_form button {
+    border-radius: 5px;
+    border: none;
+    background-color: orange;
+    margin-top: 20px;
+    padding: 8px;
+    font-size: 18px;
+}

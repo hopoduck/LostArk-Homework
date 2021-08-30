@@ -1,0 +1,41 @@
+header {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    background-color: orange;
+    height: 90px;
+}
+header .logo {
+    font-size: 50px;
+}
+header a {
+    text-decoration: none;
+    color: black;
+}
+header a:hover {
+    color: rgb(240, 96, 39);
+    text-decoration: underline;
+}
+header .user_info {
+    font-size: 16px;
+    padding-left: 20px;
+}
+header .user_name {
+    font-size: 26px;
+}
+header .left {
+    float: left;
+    width: 500px;
+    height: 60px;
+}
+header .right {
+    float: left;
+    width: 500px;
+    height: 60px;
+    text-align: right;
+    vertical-align: text-bottom;
+}
+.right .menu {
+    line-height: 60px;
+    margin-left: 10px;
+    font-size: 18px;
+}
