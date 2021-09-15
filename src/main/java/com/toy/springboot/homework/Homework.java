@@ -84,4 +84,11 @@ public class Homework {
 				+ homework_account_value + ", sort_id=" + sort_id + ", member_id=" + member_id + "]";
 	}
 
+	public String toJSON() {
+		return "{\"homework_id\": \"" + homework_id + "\", \"homework_name\": \"" + homework_name
+				+ "\", \"homework_level\": " + homework_level + ", \"homework_type\": \"" + homework_type
+				+ "\", \"homework_account_value\": " + homework_account_value + ", \"sort_id\": \"" + sort_id
+				+ "\", \"member_id\": \"" + member_id + "\"}";
+	}
+
 }

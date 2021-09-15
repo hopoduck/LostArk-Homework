@@ -3,10 +3,8 @@ package com.toy.springboot.character;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +17,7 @@ import com.toy.springboot.URL;
 import com.toy.springboot.homework.Homework;
 import com.toy.springboot.homework.HomeworkService;
 import com.toy.springboot.homework_record.HomeworkRecordService;
+import com.toy.springboot.member.Member;
 
 @Controller
 public class CharacterController {
@@ -37,19 +36,7 @@ public class CharacterController {
 	@PostMapping("/character/getlevel")
 	@ResponseBody
 	public String getLevel(String character_name) {
-		String url = "https://m-lostark.game.onstove.com/Profile/Character/" + character_name;
-		Document doc = null;
-		try {
-			doc = Jsoup.connect(url).get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Element element = doc.selectFirst("dl.item2 dd.level");
-		try {
-			return element.text().replace(",", "");
-		} catch (NullPointerException e) {
-			return "-1";
-		}
+		return cService.getLevel(character_name);
 	}
 
 	@PostMapping("/character/add")
@@ -101,6 +88,19 @@ public class CharacterController {
 		String character_id = Integer.toString(cService.getSeqCurrval());
 		ArrayList<Homework> homeworkList = hService.getHomeworkListByMember_id(c.getMember_id());
 		hrService.addHomeworkRecordByCharacter_id(homeworkList, character_id);
+		return URL.redir + URL.menu;
+	}
+
+	@PostMapping("/character/edit")
+	public String characterEdit(Character c) {
+		cService.editCharacter(c);
+		return URL.redir + URL.menu;
+	}
+
+	@GetMapping("/character/update-level")
+	public String characterLevelUpdate(HttpSession session) {
+		String member_id = ((Member) session.getAttribute("user")).getMember_id();
+		cService.characterLevelUpdate(member_id);
 		return URL.redir + URL.menu;
 	}
 

@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,6 +25,7 @@
             let oldHtml = {};
             // 숙제 프리셋 데이터
             const homeworkPreset = {
+                에포나: [250, "day", false],
                 "카오스 던전": [250, "day", false],
                 "가디언 토벌": [302, "day", false],
                 "오레하의 우물": [1340, "week", false],
@@ -37,7 +39,10 @@
                 "쿠크세이튼 노말": [1475, "week", false],
                 "아브렐슈드 노말": [1490, "week", false],
                 카오스게이트: [302, "day", true],
+                길드출석: [0, "day", false],
+                호감도: [0, "day", false],
             };
+            const homeworkData = {};
             // 페이지 시작시 초기 설정
             function init() {
                 // 숙제 목록업데이트
@@ -126,36 +131,29 @@
                         },
                     });
                 });
-                // 캐릭터 이름에 마우스를 가져다 댈 시 삭제버튼을 보여준다.
+                // 캐릭터 이름에 마우스를 가져다 댈 시 수정/삭제버튼을 보여준다.
                 $(".character_name").hover(
                     function () {
                         const characterTh = $(this);
                         const character_id = characterTh.attr("itemid");
+                        const character_level = characterTh.attr("value");
                         const character_name = characterTh.attr("itemprop");
                         const sort_id = [characterTh.prev().attr("itemscope"), characterTh.attr("itemscope"), characterTh.next().attr("itemscope")];
                         let html = ``;
-                        // if (characterTh.prev().html() !== "") {
-                        //     html += `<button class="left btn btn-outline-secondary mx-1" onclick="location.href='${pageContext.request.contextPath}/character/changesortid?sort_id1=${"${sort_id[0]}"}&sort_id2=${"${sort_id[1]}"}'"><i class="fas fa-caret-left"></i></button>`;
-                        // }
-                        // html += `<button class="delete_btn btn btn-outline-danger" onclick="location.href='${pageContext.request.contextPath}/character/delete?character_id=${"${character_id}"}'"><i class="far fa-trash-alt"></i> 삭제</button>`;
-                        // if (characterTh.next().length !== 0) {
-                        //     html += `<button class="right btn btn-outline-secondary mx-1" onclick="location.href='${pageContext.request.contextPath}/character/changesortid?sort_id1=${"${sort_id[1]}"}&sort_id2=${"${sort_id[2]}"}'"><i class="fas fa-caret-right"></i></button>`;
-                        // }
-
                         if (characterTh.prev().html() !== "") {
-                            html += `<i class="fas fa-caret-left pointer p-2" onclick="location.href='${
+                            html += `<i class="fas fa-caret-left pointer p-2" title="왼쪽으로 이동" onclick="location.href='${
                                 pageContext.request.contextPath
                             }/character/changesortid?sort_id1=${"${sort_id[0]}"}&sort_id2=${"${sort_id[1]}"}'"></i>`;
                         }
-                        html += `<i class="far fa-trash-alt pointer p-2" onclick="location.href='${
+                        html += `<i class="far fa-edit pointer p-2" title="이 캐릭터 수정" data-bs-toggle="modal" data-bs-target="#modal-characterEdit" data-bs-character_name="${"${character_name}"}" data-bs-character_level="${"${character_level}"}" data-bs-character_id="${"${character_id}"}"></i>`;
+                        html += `<i class="far fa-trash-alt pointer p-2" title="이 캐릭터 삭제" onclick="location.href='${
                             pageContext.request.contextPath
                         }/character/delete?character_id=${"${character_id}"}'"></i>`;
                         if (characterTh.next().length !== 0) {
-                            html += `<i class="fas fa-caret-right pointer p-2" onclick="location.href='${
+                            html += `<i class="fas fa-caret-right pointer p-2" title="오른쪽으로 이동" onclick="location.href='${
                                 pageContext.request.contextPath
                             }/character/changesortid?sort_id1=${"${sort_id[1]}"}&sort_id2=${"${sort_id[2]}"}'"></i>`;
                         }
-
                         characterTh.html(html);
                     },
                     function () {
@@ -166,12 +164,22 @@
                             <div class="character_level">${"${characterTh.attr('value')}"}</div>`);
                     }
                 );
-                // 숙제 이름에 마우스를 가져다 댈 시 삭제버튼을 보여준다.
+                // 숙제 이름에 마우스를 가져다 댈 시 수정/삭제버튼을 보여준다.
                 $(".homework_name").hover(
-                    function () {
+                    async function () {
                         oldHtml = $(this).html();
                         const homeworkTd = $(this);
                         const homework_id = $(this).attr("itemid");
+                        if (!(homework_id in homeworkData)) {
+                            await $.ajax({
+                                type: "post",
+                                url: "${pageContext.request.contextPath}/homework/get-data",
+                                data: { homework_id },
+                                success: function (response) {
+                                    homeworkData[homework_id] = $.parseJSON(response);
+                                },
+                            });
+                        }
                         const sort_id = [
                             homeworkTd.parent().prev().children("td.homework_name").attr("itemscope"),
                             homeworkTd.attr("itemscope"),
@@ -179,17 +187,26 @@
                         ];
                         let html = "";
                         if (homeworkTd.parent().prev().prev().hasClass(homeworkTd.parent().attr("class"))) {
-                            html += `<button class="up btn btn-outline-secondary mx-1" onclick="location.href='${
+                            html += `<i class="fas fa-caret-up pointer p-2" title="위로 이동" onclick="location.href='${
                                 pageContext.request.contextPath
-                            }/homework/changesortid?sort_id1=${"${sort_id[0]}"}&sort_id2=${"${sort_id[1]}"}'"><i class="fas fa-caret-up"></i></button>`;
+                            }/homework/changesortid?sort_id1=${"${sort_id[0]}"}&sort_id2=${"${sort_id[1]}"}'"></i>`;
                         }
-                        html += `<button class="delete_btn btn btn-outline-danger" onclick="location.href='${
+                        html += `<i class="far fa-edit pointer p-2" title="이 숙제 수정" data-bs-toggle="modal" data-bs-target="#modal-homework-edit" 
+                                    data-bs-homework_name="${"${homeworkData[homework_id]['homework_name']}"}" 
+                                    data-bs-homework_level="${"${homeworkData[homework_id]['homework_level']}"}" 
+                                    data-bs-homework_id="${"${homeworkData[homework_id]['homework_id']}"}" 
+                                    data-bs-homework_type="${"${homeworkData[homework_id]['homework_type']}"}" 
+                                    data-bs-homework_account_value="${"${homeworkData[homework_id]['homework_account_value']}"}" 
+                                    data-bs-homework_bonus="${"${homeworkData[homework_id]['homework_bonus']}"}" 
+                                    data-bs-homework_bonus_value="${"${homeworkData[homework_id]['homework_bonus_value']}"}"
+                                ></i>`;
+                        html += `<i class="far fa-trash-alt pointer p-2" title="이 숙제 삭제" onclick="location.href='${
                             pageContext.request.contextPath
-                        }/homework/delete?homework_id=${"${homework_id}"}'"><i class="far fa-trash-alt"></i> 삭제</button>`;
+                        }/homework/delete?homework_id=${"${homework_id}"}'"></i>`;
                         if (homeworkTd.parent().next().hasClass(homeworkTd.parent().attr("class"))) {
-                            html += `<button class="up btn btn-outline-secondary mx-1" onclick="location.href='${
+                            html += `<i class="fas fa-caret-down pointer p-2" title="아래로 이동" onclick="location.href='${
                                 pageContext.request.contextPath
-                            }/homework/changesortid?sort_id1=${"${sort_id[1]}"}&sort_id2=${"${sort_id[2]}"}'"><i class="fas fa-caret-down"></i></button>`;
+                            }/homework/changesortid?sort_id1=${"${sort_id[1]}"}&sort_id2=${"${sort_id[2]}"}'"></i>`;
                         }
                         $(this).html(html);
                     },
@@ -238,10 +255,71 @@
                 $("#memo_content").on("input", function (e) {
                     $("#memoSize").html($("#memo_content").val().length + " / 5000");
                 });
+                // 캐릭터/숙제 레벨 입력시 숫자만 입력가능하게 하고, 최소/최대레벨 제한
+                $(document).on("input", "input[name='character_level'], input[name='homework_level']", function (e) {
+                    const input = $(this);
+                    if (input.val() < 0) {
+                        input.val(0);
+                    } else if (input.val() > 1590) {
+                        input.val(1590);
+                    }
+                    input.val(parseInt(input.val() + "".replace("/[^0-9]/g", "")));
+                });
+                // 캐릭터 수정 모달
+                const modalCharacterEdit = document.getElementById("modal-characterEdit");
+                modalCharacterEdit.addEventListener("show.bs.modal", function (event) {
+                    // Button that triggered the modal
+                    const button = event.relatedTarget;
+                    // Extract info from data-bs-* attributes
+                    const characterId = button.getAttribute("data-bs-character_id");
+                    const characterName = button.getAttribute("data-bs-character_name");
+                    const characterLevel = button.getAttribute("data-bs-character_level");
+                    // If necessary, you could initiate an AJAX request here
+                    // and then do the updating in a callback.
+                    //
+                    // Update the modal's content.
+                    modalCharacterEdit.querySelector(".modal-title").textContent = characterName + " 정보 수정";
+                    modalCharacterEdit.querySelector(".modal-body input#modal-character_id").value = characterId;
+                    modalCharacterEdit.querySelector(".modal-body input#modal-character_name").value = characterName;
+                    modalCharacterEdit.querySelector(".modal-body input#modal-character_level").value = characterLevel;
+                    const saveBtn = document.getElementById("modal-characterEdit-btn");
+                    saveBtn.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        modalCharacterEdit.querySelector("form").submit();
+                    });
+                });
+                // 숙제 수정 모달
+                const modalHomeworkEdit = document.getElementById("modal-homework-edit");
+                modalHomeworkEdit.addEventListener("show.bs.modal", function (event) {
+                    // Button that triggered the modal
+                    const button = event.relatedTarget;
+                    // Extract info from data-bs-* attributes
+                    const homework_id = button.getAttribute("data-bs-homework_id");
+                    const homework_name = button.getAttribute("data-bs-homework_name");
+                    const homework_level = button.getAttribute("data-bs-homework_level");
+                    const homework_type = button.getAttribute("data-bs-homework_type");
+                    const homework_account_value = $.parseJSON(button.getAttribute("data-bs-homework_account_value"));
+                    // If necessary, you could initiate an AJAX request here
+                    // and then do the updating in a callback.
+                    //
+                    // Update the modal's content.
+                    modalHomeworkEdit.querySelector(".modal-title").textContent = homework_name + " 정보 수정";
+                    modalHomeworkEdit.querySelector(".modal-body input#modal-homework_id").value = homework_id;
+                    modalHomeworkEdit.querySelector(".modal-body input#modal-homework_name").value = homework_name;
+                    modalHomeworkEdit.querySelector(".modal-body input#modal-homework_level").value = homework_level;
+                    modalHomeworkEdit.querySelector("form").homework_type.value = homework_type;
+                    $(".modal-body input#modal-homework_account_value").prop("checked", homework_account_value);
+                    const saveBtn = document.getElementById("modal-homework-edit-btn");
+                    saveBtn.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        modalHomeworkEdit.querySelector("form").submit();
+                    });
+                });
             });
         </script>
     </head>
     <body>
+        <!-- 헤더 (네비바) -->
         <header>
             <div class="wrap">
                 <div class="left">
@@ -253,15 +331,19 @@
                         <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
                     </span>
                     <span class="menu"> <a href="${pageContext.request.contextPath}/character/add" id="character_add">캐릭터 추가</a> </span
-                    ><span class="menu"> <a href="${pageContext.request.contextPath}/homework/add" id="homework_add">숙제 추가</a> </span
-                    ><span class="menu">
+                    ><span class="menu"> <a href="${pageContext.request.contextPath}/homework/add" id="homework_add">숙제 추가</a> </span>
+                    <span class="menu">
+                        <a href="${pageContext.request.contextPath}/character/update-level">캐릭터 레벨 업데이트</a>
+                    </span>
+                    <span class="menu">
                         <a href="#" id="memberOut">탈퇴</a>
                     </span>
                 </div>
             </div>
         </header>
         <div class="wrap main">
-            <div id="character_add_form" class="border add_form my-3 p-4" style="display: none">
+            <!-- 캐릭터 추가 폼 -->
+            <div id="character_add_form" class="border add_form my-3" style="display: none">
                 <form action="${pageContext.request.contextPath}/character/add" method="POST">
                     <div class="form-floating mb-3">
                         <input type="text" name="character_name" id="character_name" class="form-control" placeholder="캐릭터 이름" required />
@@ -288,7 +370,8 @@
                     <button type="submit" class="btn btn-success"><i class="far fa-plus-square"></i> 추가</button>
                 </form>
             </div>
-            <div id="homework_add_form" class="border add_form my-3 p-4" style="display: none">
+            <!-- 숙제 추가 폼 -->
+            <div id="homework_add_form" class="border add_form my-3" style="display: none">
                 <form action="${pageContext.request.contextPath}/homework/add" method="POST">
                     <div class="form-floating mb-3">
                         <input
@@ -330,6 +413,7 @@
                     <button type="submit" class="btn btn-success"><i class="far fa-plus-square"></i> 추가</button>
                 </form>
             </div>
+            <!-- 숙제 기록표 -->
             <h1 class="title">숙제 기록</h1>
             <c:choose>
                 <c:when test="${not empty characterList && (not empty dayHomework || not empty weekHomework)}">
@@ -360,7 +444,9 @@
                                     </td>
                                     <c:forEach var="c" items="${characterList}">
                                         <c:set var="disabled" value="${c.character_level<dh.homework_level?'disabled':''}" />
-                                        <!-- <td><input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}></td> -->
+                                        <td>
+                                            <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}>
+                                        </td>
                                     </c:forEach>
                                 </tr>
                             </c:forEach>
@@ -376,7 +462,9 @@
                                     </td>
                                     <c:forEach var="c" items="${characterList}">
                                         <c:set var="disabled" value="${c.character_level<wh.homework_level?'disabled':''}" />
-                                        <!-- <td><input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}></td> -->
+                                        <td>
+                                            <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}>
+                                        </td>
                                     </c:forEach>
                                 </tr>
                             </c:forEach>
@@ -390,9 +478,12 @@
                     </h3>
                 </c:otherwise>
             </c:choose>
+            <!-- 메모 -->
             <form id="memoForm" method="POST">
                 <div class="form-floating mb-3">
-                    <textarea name="memo_content" id="memo_content" class="form-control" placeholder="메모" maxlength="5000">${memo.memo_content}</textarea>
+                    <textarea name="memo_content" id="memo_content" class="form-control" placeholder="메모" maxlength="5000">
+${memo.memo_content}</textarea
+                    >
                     <label for="memo_content">메모</label>
                 </div>
                 <input type="hidden" name="member_id" value="${user.member_id}" />
@@ -401,6 +492,115 @@
                     <button type="submit" class="btn btn-success" id="memoSubmit">저장</button>
                 </div>
             </form>
+            <!-- 캐릭터 수정 모달 -->
+            <div class="modal fade" id="modal-characterEdit" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">캐릭터 정보 수정</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="${pageContext.request.contextPath}/character/edit" method="POST">
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="text"
+                                        name="character_name"
+                                        id="modal-character_name"
+                                        class="form-control"
+                                        placeholder="캐릭터 이름"
+                                        required
+                                    />
+                                    <label for="modal-character_name">캐릭터 이름</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="number"
+                                        name="character_level"
+                                        id="modal-character_level"
+                                        class="form-control"
+                                        placeholder="캐릭터 아이템 레벨"
+                                        min="0"
+                                        max="1590"
+                                        required
+                                    />
+                                    <label for="modal-character_level">캐릭터 아이템 레벨</label>
+                                </div>
+                                <input type="hidden" name="character_id" id="modal-character_id" />
+                                <input type="hidden" name="member_id" value="${user.member_id}" />
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                            <button type="button" class="btn btn-success" id="modal-characterEdit-btn"><i class="far fa-edit"></i> 수정</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 숙제 수정 모달 -->
+            <div class="modal fade" id="modal-homework-edit" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">숙제 정보 수정</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="${pageContext.request.contextPath}/homework/edit" method="POST">
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="text"
+                                        name="homework_name"
+                                        id="modal-homework_name"
+                                        class="form-control"
+                                        placeholder="숙제 이름"
+                                        list="homework_preset"
+                                        required
+                                    />
+                                    <datalist id="homework_preset"></datalist>
+                                    <label for="modal-homework_name">숙제 이름</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="number"
+                                        name="homework_level"
+                                        id="modal-homework_level"
+                                        class="form-control"
+                                        placeholder="최소 레벨"
+                                        min="0"
+                                        max="1590"
+                                        required
+                                    />
+                                    <label for="modal-homework_level">최소 레벨</label>
+                                </div>
+                                <div class="btn-group mb-3" role="group">
+                                    <input type="radio" class="btn-check" name="homework_type" id="modal-day" value="day" required />
+                                    <label class="btn btn-outline-warning" for="modal-day">일일 숙제</label>
+                                    <input type="radio" class="btn-check" name="homework_type" id="modal-week" value="week" required />
+                                    <label class="btn btn-outline-warning" for="modal-week">주간 숙제</label>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        id="modal-homework_account_value"
+                                        name="homework_account_value"
+                                        value="true"
+                                    />
+                                    <label class="form-check-label" for="modal-homework_account_value">원정대 1회 제한</label>
+                                </div>
+                                <input type="hidden" name="homework_id" id="modal-homework_id" />
+                                <input type="hidden" name="member_id" value="${user.member_id}" />
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                            <button type="button" class="btn btn-success" id="modal-homework-edit-btn"><i class="far fa-edit"></i> 수정</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 숙제 수정 모달 끝 -->
         </div>
     </body>
 </html>

@@ -1,10 +1,17 @@
 .main {
     white-space: nowrap;
     overflow-x: scroll;
+    padding-bottom: 40px;
 }
 h1.title {
     margin: 20px 0px 0px 0px;
 }
+
+#character_add_form,
+#homework_add_form {
+    padding: 1.5rem;
+}
+
 table {
     border: 5px solid orange;
     border-collapse: collapse;
@@ -12,7 +19,7 @@ table {
 th,
 td {
     border-top: 1px solid black;
-    padding: 15px 8px;
+    padding: 15px 5px;
     text-align: center;
     vertical-align: middle;
 }
@@ -25,6 +32,7 @@ td {
 .record input[type="checkbox"] {
     width: 22px;
     height: 22px;
+    vertical-align: text-bottom;
 }
 .character_name {
     min-width: 100px;
@@ -62,5 +70,14 @@ button.down {
 }
 
 .pointer {
+    opacity: 0.7;
     cursor: pointer;
+}
+.pointer:hover {
+    opacity: 1;
+}
+
+.hide {
+    overflow: hidden;
+    transition: height 2s;
 }

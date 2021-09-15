@@ -66,6 +66,7 @@ public class MemberController {
 		if (m.getMember_password().equals(member_password)) {
 			HttpSession session = request.getSession();
 			session.setAttribute("user", m);
+			cService.characterLevelUpdate(member_id);
 			return URL.redir + URL.menu;
 		} else {
 			return URL.redir + URL.login;

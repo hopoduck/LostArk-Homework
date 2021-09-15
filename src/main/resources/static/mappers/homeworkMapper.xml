@@ -35,6 +35,7 @@
 		parameterType="com.toy.springboot.homework.Homework">
 		update LAR_HOMEWORK set 
 		homework_name=#{homework_name},
+		homework_level=#{homework_level},
 		homework_type=#{homework_type},
 		homework_account_value=#{homework_account_value}
 		where
