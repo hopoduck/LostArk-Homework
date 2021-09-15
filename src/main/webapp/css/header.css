@@ -3,6 +3,8 @@ header {
     padding-bottom: 10px;
     background-color: orange;
     height: 90px;
+    width: 100%;
+    min-width: 1000px;
 }
 header .logo {
     font-size: 50px;
@@ -26,6 +28,7 @@ header .left {
     float: left;
     width: 500px;
     height: 60px;
+    line-height: 60px;
 }
 header .right {
     float: left;

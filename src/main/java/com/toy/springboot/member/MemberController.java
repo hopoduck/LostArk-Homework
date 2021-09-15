@@ -18,6 +18,8 @@ import com.toy.springboot.URL;
 import com.toy.springboot.character.CharacterService;
 import com.toy.springboot.homework.Homework;
 import com.toy.springboot.homework.HomeworkService;
+import com.toy.springboot.memo.Memo;
+import com.toy.springboot.memo.MemoService;
 
 @Controller
 public class MemberController {
@@ -28,6 +30,8 @@ public class MemberController {
 	private CharacterService cService;
 	@Autowired
 	private HomeworkService hService;
+	@Autowired
+	private MemoService mmService;
 
 	@Autowired
 	private HttpSession session;
@@ -79,6 +83,13 @@ public class MemberController {
 			ArrayList<Homework> list = hService.getHomeworkListByMember_id(m.getMember_id());
 			model.addAttribute("dayHomework", hService.getDayHomework(list));
 			model.addAttribute("weekHomework", hService.getWeekHomework(list));
+			Memo mm = mmService.getMemo(m.getMember_id());
+			if (mm == null) {
+				mmService.createMemo(m.getMember_id());
+				model.addAttribute("memo", mmService.getMemo(m.getMember_id()));
+			} else {
+				model.addAttribute("memo", mmService.getMemo(m.getMember_id()));
+			}
 			return URL.menu;
 		}
 
@@ -105,7 +116,7 @@ public class MemberController {
 
 	@RequestMapping("/member/out")
 	public String out() {
-		Member m= (Member) session.getAttribute("user");
+		Member m = (Member) session.getAttribute("user");
 		mService.deleteMember(m.getMember_id());
 		return URL.redir + URL.login;
 	}

@@ -40,41 +40,27 @@ td {
 }
 button.delete_btn,
 button.left,
-button.right {
-    margin: 0px 2px;
-    padding: 5px;
+button.right,
+button.up,
+button.down {
+    font-size: 14px;
+    background-color: #fff;
 }
 
-#character_add_form,
-#homework_add_form {
-    margin-top: 20px;
-    padding: 20px;
-    border: 3px solid orange;
-    border-radius: 30px;
-    font-size: 20px;
+.add_form {
+    border-radius: 1rem;
 }
-#character_add_form input[type="text"],
-#homework_add_form input[type="text"] {
-    border-radius: 15px;
-    border: 2px solid orange;
-    padding: 10px;
-    font-size: 18px;
-    margin-bottom: 20px;
+
+#memo_content {
+    width: 100%;
+    height: 300px;
+    resize: none;
 }
-#character_add_form input[type="text"]:focus,
-#homework_add_form input[type="text"]:focus {
-    outline: none;
+
+.character_level::before {
+    content: "Lv. ";
 }
-#character_add_form input[type="text"]::placeholder,
-#homework_add_form input[type="text"]::placeholder {
-    color: black;
-}
-#character_add_form button,
-#homework_add_form button {
-    border-radius: 5px;
-    border: none;
-    background-color: orange;
-    margin-top: 20px;
-    padding: 8px;
-    font-size: 18px;
+
+.pointer {
+    cursor: pointer;
 }

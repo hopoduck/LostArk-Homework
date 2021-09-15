@@ -2,17 +2,21 @@ package com.toy.springboot.character;
 
 public class Character {
 
-	private String character_id, character_name, member_id, sort_id;
+	private String character_id, character_name;
+	private int character_level;
+	private String sort_id, member_id;
 
 	public Character() {
 	}
 
-	public Character(String character_id, String character_name, String member_id, String sort_id) {
+	public Character(String character_id, String character_name, int character_level, String sort_id,
+			String member_id) {
 		super();
 		this.character_id = character_id;
 		this.character_name = character_name;
-		this.member_id = member_id;
+		this.character_level = character_level;
 		this.sort_id = sort_id;
+		this.member_id = member_id;
 	}
 
 	public String getCharacter_id() {
@@ -31,12 +35,12 @@ public class Character {
 		this.character_name = character_name;
 	}
 
-	public String getMember_id() {
-		return member_id;
+	public int getCharacter_level() {
+		return character_level;
 	}
 
-	public void setMember_id(String member_id) {
-		this.member_id = member_id;
+	public void setCharacter_level(int character_level) {
+		this.character_level = character_level;
 	}
 
 	public String getSort_id() {
@@ -47,10 +51,18 @@ public class Character {
 		this.sort_id = sort_id;
 	}
 
+	public String getMember_id() {
+		return member_id;
+	}
+
+	public void setMember_id(String member_id) {
+		this.member_id = member_id;
+	}
+
 	@Override
 	public String toString() {
-		return "Character [character_id=" + character_id + ", character_name=" + character_name + ", member_id="
-				+ member_id + ", sort_id=" + sort_id + "]";
+		return "Character [character_id=" + character_id + ", character_name=" + character_name + ", character_level="
+				+ character_level + ", sort_id=" + sort_id + ", member_id=" + member_id + "]";
 	}
 
 }

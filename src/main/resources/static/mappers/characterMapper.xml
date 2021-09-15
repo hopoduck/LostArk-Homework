@@ -7,12 +7,14 @@
 		id="character">
 		<result property="character_id" column="character_id" />
 		<result property="character_name" column="character_name" />
+		<result property="character_level" column="character_level" />
+		<result property="sort_id" column="sort_id" />
 		<result property="member_id" column="member_id" />
 	</resultMap>
 	<insert id="insert"
 		parameterType="com.toy.springboot.character.Character">
 		insert into LAR_CHARACTER 
-		values (LAR_SEQ_CHARACTER.nextval, #{character_name}, #{member_id},	LAR_SEQ_CHARACTER.currval)
+		values (LAR_SEQ_CHARACTER.nextval, #{character_name}, #{character_level}, LAR_SEQ_CHARACTER.currval, #{member_id})
 	</insert>
 	<select id="select" parameterType="String"
 		resultType="com.toy.springboot.character.Character">
@@ -30,7 +32,7 @@
 	<update id="update"
 		parameterType="com.toy.springboot.character.Character">
 		update LAR_CHARACTER 
-		set	character_name=#{character_name}
+		set	character_name=#{character_name}, character_level=#{character_level}
 		where character_id=#{character_id}
 	</update>
 	<update id="updateSortId">

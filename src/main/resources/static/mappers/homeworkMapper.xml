@@ -7,17 +7,17 @@
 		id="homework">
 		<result property="homework_id" column="homework_id" />
 		<result property="homework_name" column="homework_name" />
+		<result property="homework_level" column="homework_level" />
 		<result property="homework_type" column="homework_type" />
 		<result property="homework_account_value"
 			column="homework_account_value" />
+		<result property="sort_id" column="sort_id" />
 		<result property="member_id" column="member_id" />
 	</resultMap>
 	<insert id="insert"
 		parameterType="com.toy.springboot.homework.Homework">
-		insert into LAR_HOMEWORK values (LAR_SEQ_HOMEWORK.nextval,
-		#{homework_name},
-		#{homework_type}, #{homework_account_value},
-		#{member_id})
+		insert into LAR_HOMEWORK 
+		values (LAR_SEQ_HOMEWORK.nextval, #{homework_name}, #{homework_level}, #{homework_type}, #{homework_account_value}, LAR_SEQ_HOMEWORK.currval, #{member_id})
 	</insert>
 	<select id="select" parameterType="String"
 		resultType="com.toy.springboot.homework.Homework">
@@ -26,17 +26,24 @@
 	</select>
 	<select id="selectListByMember_id" parameterType="String"
 		resultMap="homework">
-		select * from LAR_HOMEWORK where
-		member_id=#{member_id} order by
-		homework_id
+		select * 
+		from LAR_HOMEWORK 
+		where member_id=#{member_id} 
+		order by sort_id
 	</select>
 	<update id="update"
 		parameterType="com.toy.springboot.homework.Homework">
-		update LAR_HOMEWORK set homework_name=#{homework_name},
+		update LAR_HOMEWORK set 
+		homework_name=#{homework_name},
 		homework_type=#{homework_type},
 		homework_account_value=#{homework_account_value}
 		where
 		homework_id=#{homework_id}
+	</update>
+	<update id="updateSortId" parameterType="String">
+		update LAR_HOMEWORK 
+		set sort_id=#{sort_id2}
+		where sort_id=#{sort_id1}
 	</update>
 	<delete id="delete" parameterType="String">
 		delete from LAR_HOMEWORK where

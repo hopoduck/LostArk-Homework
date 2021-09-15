@@ -36,6 +36,7 @@ public class HomeworkController {
 //			체크를 하지 않았으므로 false로 지정
 			h.setHomework_account_value("false");
 		}
+		System.out.println(h);
 		hService.addHomework(h);
 		String homework_id = Integer.toString(hService.getSeqCurrval());
 		ArrayList<Character> characterList = cService.getCharacterListByMember_id(h.getMember_id());
@@ -45,6 +46,12 @@ public class HomeworkController {
 		return URL.redir + URL.menu;
 	}
 
+	@RequestMapping("/homework/changesortid")
+	public String chageSortId(String sort_id1, String sort_id2) {
+		hService.editSortId(sort_id1, sort_id2);
+		return URL.redir + URL.menu;
+	}
+	
 	@RequestMapping("/homework/delete")
 	public String delete(@RequestParam String homework_id) {
 		hService.deleteHomework(homework_id);
