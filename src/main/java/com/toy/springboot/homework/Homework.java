@@ -4,13 +4,15 @@ public class Homework {
 
 	private String homework_id, homework_name;
 	private int homework_level;
-	private String homework_type, homework_account_value, sort_id, member_id;
+	private String homework_type, homework_account_value;
+	private int sort_id;
+	private String member_id;
 
 	public Homework() {
 	}
 
 	public Homework(String homework_id, String homework_name, int homework_level, String homework_type,
-			String homework_account_value, String sort_id, String member_id) {
+			String homework_account_value, int sort_id, String member_id) {
 		super();
 		this.homework_id = homework_id;
 		this.homework_name = homework_name;
@@ -61,11 +63,11 @@ public class Homework {
 		this.homework_account_value = homework_account_value;
 	}
 
-	public String getSort_id() {
+	public int getSort_id() {
 		return sort_id;
 	}
 
-	public void setSort_id(String sort_id) {
+	public void setSort_id(int sort_id) {
 		this.sort_id = sort_id;
 	}
 
@@ -87,8 +89,8 @@ public class Homework {
 	public String toJSON() {
 		return "{\"homework_id\": \"" + homework_id + "\", \"homework_name\": \"" + homework_name
 				+ "\", \"homework_level\": " + homework_level + ", \"homework_type\": \"" + homework_type
-				+ "\", \"homework_account_value\": " + homework_account_value + ", \"sort_id\": \"" + sort_id
-				+ "\", \"member_id\": \"" + member_id + "\"}";
+				+ "\", \"homework_account_value\": " + homework_account_value + ", \"sort_id\": " + sort_id
+				+ ", \"member_id\": \"" + member_id + "\"}";
 	}
 
 }

@@ -35,7 +35,7 @@
 		set	character_name=#{character_name}, character_level=#{character_level}
 		where character_id=#{character_id}
 	</update>
-	<update id="updateSortId">
+	<update id="updateSortId" parameterType="com.toy.springboot.Sort">
 		update LAR_CHARACTER 
 		set	sort_id=#{sort_id2}
 		where sort_id=#{sort_id1}

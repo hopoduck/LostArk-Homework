@@ -3,14 +3,13 @@ package com.toy.springboot.character;
 public class Character {
 
 	private String character_id, character_name;
-	private int character_level;
-	private String sort_id, member_id;
+	private int character_level, sort_id;
+	private String member_id;
 
 	public Character() {
 	}
 
-	public Character(String character_id, String character_name, int character_level, String sort_id,
-			String member_id) {
+	public Character(String character_id, String character_name, int character_level, int sort_id, String member_id) {
 		super();
 		this.character_id = character_id;
 		this.character_name = character_name;
@@ -43,11 +42,11 @@ public class Character {
 		this.character_level = character_level;
 	}
 
-	public String getSort_id() {
+	public int getSort_id() {
 		return sort_id;
 	}
 
-	public void setSort_id(String sort_id) {
+	public void setSort_id(int sort_id) {
 		this.sort_id = sort_id;
 	}
 

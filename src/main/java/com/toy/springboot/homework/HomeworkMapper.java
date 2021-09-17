@@ -15,7 +15,7 @@ public interface HomeworkMapper {
 
 	void update(Homework h);
 
-	void updateSortId(String sort_id1, String sort_id2);
+	void updateSortId(int sort_id1, int sort_id2);
 
 	void delete(String homework_id);
 

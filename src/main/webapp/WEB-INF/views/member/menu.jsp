@@ -21,6 +21,8 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/menu.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://johnny.github.io/jquery-sortable/js/jquery-sortable.js"></script>
         <script>
             let oldHtml = {};
             // 숙제 프리셋 데이터
@@ -191,13 +193,13 @@
                                 pageContext.request.contextPath
                             }/homework/changesortid?sort_id1=${"${sort_id[0]}"}&sort_id2=${"${sort_id[1]}"}'"></i>`;
                         }
-                        html += `<i class="far fa-edit pointer p-2" title="이 숙제 수정" data-bs-toggle="modal" data-bs-target="#modal-homework-edit" 
-                                    data-bs-homework_name="${"${homeworkData[homework_id]['homework_name']}"}" 
-                                    data-bs-homework_level="${"${homeworkData[homework_id]['homework_level']}"}" 
-                                    data-bs-homework_id="${"${homeworkData[homework_id]['homework_id']}"}" 
-                                    data-bs-homework_type="${"${homeworkData[homework_id]['homework_type']}"}" 
-                                    data-bs-homework_account_value="${"${homeworkData[homework_id]['homework_account_value']}"}" 
-                                    data-bs-homework_bonus="${"${homeworkData[homework_id]['homework_bonus']}"}" 
+                        html += `<i class="far fa-edit pointer p-2" title="이 숙제 수정" data-bs-toggle="modal" data-bs-target="#modal-homework-edit"
+                                    data-bs-homework_name="${"${homeworkData[homework_id]['homework_name']}"}"
+                                    data-bs-homework_level="${"${homeworkData[homework_id]['homework_level']}"}"
+                                    data-bs-homework_id="${"${homeworkData[homework_id]['homework_id']}"}"
+                                    data-bs-homework_type="${"${homeworkData[homework_id]['homework_type']}"}"
+                                    data-bs-homework_account_value="${"${homeworkData[homework_id]['homework_account_value']}"}"
+                                    data-bs-homework_bonus="${"${homeworkData[homework_id]['homework_bonus']}"}"
                                     data-bs-homework_bonus_value="${"${homeworkData[homework_id]['homework_bonus_value']}"}"
                                 ></i>`;
                         html += `<i class="far fa-trash-alt pointer p-2" title="이 숙제 삭제" onclick="location.href='${
@@ -317,6 +319,97 @@
                 });
             });
         </script>
+        <script>
+            // $(document).ready(function () {
+            //     let items = new Map();
+            //     // Sortable rows
+            //     $(".sorted_table").sortable({
+            //         containerSelector: "table",
+            //         itemPath: "> tbody",
+            //         itemSelector: "tr",
+            //         placeholder: '<tr class="placeholder"/>',
+            //     });
+            //     // Sortable column heads
+            //     var oldIndex, oldItemId;
+            //     $(".sorted_head tr").sortable({
+            //         // containerSelector == thead > tr
+            //         containerSelector: "tr",
+            //         // itemSelector == Dragable Element
+            //         itemSelector: "td",
+            //         // placeholder
+            //         placeholder: '<td class="placeholder"/>',
+            //         vertical: true,
+            //         // 들기
+            //         onDragStart: function ($item, container, _super) {
+            //             oldIndex = $item.index();
+            //             oldItemId = $item.attr("itemid");
+            //             $item.appendTo($item.parent());
+            //             _super($item, container);
+            //             console.log(oldIndex);
+            //         },
+            //         // 놓기
+            //         onDrop: function ($item, container, _super) {
+            //             var field,
+            //                 newIndex = $item.index();
+            //             console.log(newIndex);
+            //             if (newIndex != oldIndex) {
+            //                 $item
+            //                     .closest("table")
+            //                     .find("tbody tr")
+            //                     .each(function (i, row) {
+            //                         row = $(row);
+            //                         if (newIndex < oldIndex) {
+            //                             row.children().eq(newIndex).before(row.children()[oldIndex]);
+            //                         } else if (newIndex > oldIndex) {
+            //                             row.children().eq(newIndex).after(row.children()[oldIndex]);
+            //                         }
+            //                     });
+            //                 // 서버에 순서변경내용 저장 테스트
+            //                 const children = $item.parent().children(".character_name");
+            //                 children.each((index, element) => {
+            //                     element = $(element);
+            //                     element.attr("itemscope", index);
+            //                     items.set(element.attr("itemid"), element.attr("itemscope"));
+            //                     // items[element.attr("itemid")] = element.attr("itemscope");
+            //                 });
+            //                 console.log(items);
+            //                 $.ajax({
+            //                     type: "post",
+            //                     url: "${pageContext.request.contextPath}/character/sorting",
+            //                     data: items,
+            //                     success: function (response) {
+            //                         // console.log($.parseJSON(response));
+            //                         console.log("Ajax success!");
+            //                     },
+            //                 });
+            //                 // const items = $item.parent().children(".character_name");
+            //                 // const ids = items.each(() => {
+            //                 //     $(this).attr("itemid");
+            //                 // });
+            //                 // console.log(items);
+            //                 // console.log(ids);
+            //                 // const sort_id1 = $item.parent().children().eq(newIndex).attr("itemscope"),
+            //                 //     sort_id2 = $item.parent().children().eq(oldIndex).attr("itemscope");
+            //                 // console.log(sort_id1, sort_id2);
+            //                 // 테스트 끝
+            //             }
+            //             _super($item, container);
+            //         },
+            //     });
+            // });
+        </script>
+        <style>
+            .placeholder {
+                background-color: yellow;
+                border: 1px solid black;
+            }
+            .dragged {
+                position: absolute;
+                top: 0;
+                opacity: 0.5;
+                z-index: 2000;
+            }
+        </style>
     </head>
     <body>
         <!-- 헤더 (네비바) -->
@@ -418,57 +511,61 @@
             <c:choose>
                 <c:when test="${not empty characterList && (not empty dayHomework || not empty weekHomework)}">
                     <table class="record">
-                        <tr>
-                            <td></td>
-                            <c:forEach var="c" items="${characterList}">
-                                <td
-                                    class="character_name"
-                                    itemid="${c.character_id}"
-                                    itemprop="${c.character_name}"
-                                    itemscope="${c.sort_id}"
-                                    value="${c.character_level}"
-                                >
-                                    <div class="character_name">${c.character_name}</div>
-                                    <div class="character_level">${c.character_level}</div>
-                                </td>
-                            </c:forEach>
-                        </tr>
-                        <c:if test="${not empty dayHomework}">
-                            <tr class="dh">
-                                <th colspan="${characterList.size()+1}">일일 숙제</th>
-                            </tr>
-                            <c:forEach var="dh" items="${dayHomework}">
-                                <tr class="dh" itemtype="${dh.homework_account_value}">
-                                    <td class="homework_name" itemid="${dh.homework_id}" itemprop="${dh.homework_name}" itemscope="${dh.sort_id}">
-                                        ${dh.homework_name}
+                        <thead class="sorted_head">
+                            <tr>
+                                <td></td>
+                                <c:forEach var="c" items="${characterList}">
+                                    <td
+                                        class="character_name"
+                                        itemid="${c.character_id}"
+                                        itemprop="${c.character_name}"
+                                        itemscope="${c.sort_id}"
+                                        value="${c.character_level}"
+                                    >
+                                        <div class="character_name">${c.character_name}</div>
+                                        <div class="character_level">${c.character_level}</div>
                                     </td>
-                                    <c:forEach var="c" items="${characterList}">
-                                        <c:set var="disabled" value="${c.character_level<dh.homework_level?'disabled':''}" />
-                                        <td>
-                                            <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}>
-                                        </td>
-                                    </c:forEach>
-                                </tr>
-                            </c:forEach>
-                        </c:if>
-                        <c:if test="${not empty weekHomework}">
-                            <tr class="wh">
-                                <th colspan="${characterList.size()+1}">주간 숙제</th>
+                                </c:forEach>
                             </tr>
-                            <c:forEach var="wh" items="${weekHomework}">
-                                <tr class="wh" itemtype="${wh.homework_account_value}">
-                                    <td class="homework_name" itemid="${wh.homework_id}" itemprop="${wh.homework_name}" itemscope="${wh.sort_id}">
-                                        ${wh.homework_name}
-                                    </td>
-                                    <c:forEach var="c" items="${characterList}">
-                                        <c:set var="disabled" value="${c.character_level<wh.homework_level?'disabled':''}" />
-                                        <td>
-                                            <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}>
-                                        </td>
-                                    </c:forEach>
+                        </thead>
+                        <tbody>
+                            <c:if test="${not empty dayHomework}">
+                                <tr class="dh">
+                                    <th colspan="${characterList.size()+1}">일일 숙제</th>
                                 </tr>
-                            </c:forEach>
-                        </c:if>
+                                <c:forEach var="dh" items="${dayHomework}">
+                                    <tr class="dh" itemtype="${dh.homework_account_value}">
+                                        <td class="homework_name" itemid="${dh.homework_id}" itemprop="${dh.homework_name}" itemscope="${dh.sort_id}">
+                                            ${dh.homework_name}
+                                        </td>
+                                        <c:forEach var="c" items="${characterList}">
+                                            <c:set var="disabled" value="${c.character_level<dh.homework_level?'disabled':''}" />
+                                            <td>
+                                                <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}>
+                                            </td>
+                                        </c:forEach>
+                                    </tr>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${not empty weekHomework}">
+                                <tr class="wh">
+                                    <th colspan="${characterList.size()+1}">주간 숙제</th>
+                                </tr>
+                                <c:forEach var="wh" items="${weekHomework}">
+                                    <tr class="wh" itemtype="${wh.homework_account_value}">
+                                        <td class="homework_name" itemid="${wh.homework_id}" itemprop="${wh.homework_name}" itemscope="${wh.sort_id}">
+                                            ${wh.homework_name}
+                                        </td>
+                                        <c:forEach var="c" items="${characterList}">
+                                            <c:set var="disabled" value="${c.character_level<wh.homework_level?'disabled':''}" />
+                                            <td>
+                                                <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}>
+                                            </td>
+                                        </c:forEach>
+                                    </tr>
+                                </c:forEach>
+                            </c:if>
+                        </tbody>
                     </table>
                 </c:when>
                 <c:otherwise>

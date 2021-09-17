@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.toy.springboot.Sort;
+
 @Mapper
 public interface CharacterMapper {
 
@@ -15,7 +17,7 @@ public interface CharacterMapper {
 
 	void update(Character c);
 
-	void updateSortId(String sort_id1, String sort_id2);
+	void updateSortId(Sort s);
 
 	void delete(String id);
 

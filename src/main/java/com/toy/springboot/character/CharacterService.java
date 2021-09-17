@@ -2,12 +2,18 @@ package com.toy.springboot.character;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.toy.springboot.Sort;
 
 @Service
 public class CharacterService {
@@ -27,7 +33,17 @@ public class CharacterService {
 
 //	sort_id기준으로 데이터 정렬해서 가져옴
 	public ArrayList<Character> getCharacterListByMember_id(String member_id) {
-		return mapper.selectListByMember_id(member_id);
+		return sort(mapper.selectListByMember_id(member_id));
+	}
+
+//	
+	public ArrayList<Character> sort(ArrayList<Character> list) {
+		for (int i = 0; i < list.size(); i++) {
+			Character c = list.get(i);
+			c.setSort_id(i);
+			editCharacter(c);
+		}
+		return list;
 	}
 
 //	캐릭터 레벨을 웹에서 가져오기
@@ -65,11 +81,16 @@ public class CharacterService {
 	}
 
 //	정렬순서 수정
-	public void editSortId(String sort_id1, String sort_id2) {
+	public void editSortId(Sort s) {
 //		sort_id1을 sort_id2로 수정 (sort_id1 => sort_id2), 반대로 동일 실행
-		mapper.updateSortId(sort_id2, "-1");
-		mapper.updateSortId(sort_id1, sort_id2);
-		mapper.updateSortId("-1", sort_id1);
+		System.out.println(s);
+		mapper.updateSortId(s.changeFirst());
+		System.out.println(s);
+		mapper.updateSortId(s.changeSecond());
+		System.out.println(s);
+		mapper.updateSortId(s.changeThird());
+		System.out.println(s);
+		s.changeFinal();
 	}
 
 //	삭제

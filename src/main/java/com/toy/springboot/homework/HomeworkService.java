@@ -58,11 +58,11 @@ public class HomeworkService {
 		return mapper.selectSeqCurrval();
 	}
 
-	public void editSortId(String sort_id1, String sort_id2) {
+	public void editSortId(int sort_id1, int sort_id2) {
 //		sort_id1을 sort_id2로 수정 (sort_id1 => sort_id2), 반대로 동일 실행
-		mapper.updateSortId(sort_id2, "-1");
+		mapper.updateSortId(sort_id2, -1);
 		mapper.updateSortId(sort_id1, sort_id2);
-		mapper.updateSortId("-1", sort_id1);
+		mapper.updateSortId(-1, sort_id1);
 	}
 
 }

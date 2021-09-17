@@ -68,7 +68,7 @@ public class HomeworkController {
 	}
 
 	@RequestMapping("/homework/changesortid")
-	public String chageSortId(String sort_id1, String sort_id2) {
+	public String chageSortId(int sort_id1, int sort_id2) {
 		hService.editSortId(sort_id1, sort_id2);
 		return URL.redir + URL.menu;
 	}

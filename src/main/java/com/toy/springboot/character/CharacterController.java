@@ -1,11 +1,15 @@
 package com.toy.springboot.character;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.toy.springboot.Sort;
 import com.toy.springboot.URL;
 import com.toy.springboot.homework.Homework;
 import com.toy.springboot.homework.HomeworkService;
@@ -112,9 +117,25 @@ public class CharacterController {
 	}
 
 	@RequestMapping("/character/changesortid")
-	public String chageSortId(String sort_id1, String sort_id2) {
-		cService.editSortId(sort_id1, sort_id2);
-		return URL.redir + URL.menu;
+	@ResponseBody
+	public String chageSortId(Sort s) {
+		cService.editSortId(s);
+		return s.toJSON();
+	}
+
+	@PostMapping("/character/sorting")
+	@ResponseBody
+	public HttpStatus sortingCharacter(String data) {
+//		TODO 오류발생! 수정필요
+		JSONObject items = new JSONObject(data);
+		for (Iterator<String> iterator = items.keys(); iterator.hasNext();) {
+			String key = iterator.next();
+			System.out.println(key);
+		}
+//		items.forEach((key, value) -> {
+//			System.out.println(key + " = " + value);
+//		});
+		return HttpStatus.OK;
 	}
 
 }
