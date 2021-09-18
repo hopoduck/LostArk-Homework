@@ -113,13 +113,6 @@ public class CharacterController {
 		return URL.redir + URL.menu;
 	}
 
-//	@RequestMapping("/character/changesortid")
-//	@ResponseBody
-//	public String chageSortId(Sort s) {
-//		cService.editSortId(s);
-//		return s.toJSON();
-//	}
-
 	@PostMapping("/character/sorting")
 	@ResponseBody
 	public HttpStatus sortingCharacter(Sort s) {

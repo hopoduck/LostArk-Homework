@@ -559,7 +559,7 @@
                                         <c:forEach var="c" items="${characterList}">
                                             <c:set var="disabled" value="${c.character_level<dh.homework_level?'disabled':''}" />
                                             <td>
-                                                <!-- <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}> -->
+                                                <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}>
                                             </td>
                                         </c:forEach>
                                     </tr>
@@ -577,7 +577,7 @@
                                         <c:forEach var="c" items="${characterList}">
                                             <c:set var="disabled" value="${c.character_level<wh.homework_level?'disabled':''}" />
                                             <td>
-                                                <!-- <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}> -->
+                                                <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}>
                                             </td>
                                         </c:forEach>
                                     </tr>
