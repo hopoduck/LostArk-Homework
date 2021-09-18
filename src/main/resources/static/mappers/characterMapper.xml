@@ -37,8 +37,8 @@
 	</update>
 	<update id="updateSortId" parameterType="com.toy.springboot.Sort">
 		update LAR_CHARACTER 
-		set	sort_id=#{sort_id2}
-		where sort_id=#{sort_id1}
+		set	sort_id=#{sort_id}
+		where character_id=#{character_id}
 	</update>
 	<delete id="delete" parameterType="String">
 		delete from LAR_CHARACTER

@@ -1,13 +1,10 @@
 package com.toy.springboot.character;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -116,25 +113,17 @@ public class CharacterController {
 		return URL.redir + URL.menu;
 	}
 
-	@RequestMapping("/character/changesortid")
-	@ResponseBody
-	public String chageSortId(Sort s) {
-		cService.editSortId(s);
-		return s.toJSON();
-	}
+//	@RequestMapping("/character/changesortid")
+//	@ResponseBody
+//	public String chageSortId(Sort s) {
+//		cService.editSortId(s);
+//		return s.toJSON();
+//	}
 
 	@PostMapping("/character/sorting")
 	@ResponseBody
-	public HttpStatus sortingCharacter(String data) {
-//		TODO 오류발생! 수정필요
-		JSONObject items = new JSONObject(data);
-		for (Iterator<String> iterator = items.keys(); iterator.hasNext();) {
-			String key = iterator.next();
-			System.out.println(key);
-		}
-//		items.forEach((key, value) -> {
-//			System.out.println(key + " = " + value);
-//		});
+	public HttpStatus sortingCharacter(Sort s) {
+		cService.editSortId(s);
 		return HttpStatus.OK;
 	}
 

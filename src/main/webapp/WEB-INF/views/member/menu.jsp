@@ -140,27 +140,15 @@
                         const character_id = characterTh.attr("itemid");
                         const character_level = characterTh.attr("value");
                         const character_name = characterTh.attr("itemprop");
-                        const sort_id = [characterTh.prev().attr("itemscope"), characterTh.attr("itemscope"), characterTh.next().attr("itemscope")];
                         let html = ``;
-                        if (characterTh.prev().html() !== "") {
-                            html += `<i class="fas fa-caret-left pointer p-2" title="왼쪽으로 이동" onclick="location.href='${
-                                pageContext.request.contextPath
-                            }/character/changesortid?sort_id1=${"${sort_id[0]}"}&sort_id2=${"${sort_id[1]}"}'"></i>`;
-                        }
                         html += `<i class="far fa-edit pointer p-2" title="이 캐릭터 수정" data-bs-toggle="modal" data-bs-target="#modal-characterEdit" data-bs-character_name="${"${character_name}"}" data-bs-character_level="${"${character_level}"}" data-bs-character_id="${"${character_id}"}"></i>`;
                         html += `<i class="far fa-trash-alt pointer p-2" title="이 캐릭터 삭제" onclick="location.href='${
                             pageContext.request.contextPath
                         }/character/delete?character_id=${"${character_id}"}'"></i>`;
-                        if (characterTh.next().length !== 0) {
-                            html += `<i class="fas fa-caret-right pointer p-2" title="오른쪽으로 이동" onclick="location.href='${
-                                pageContext.request.contextPath
-                            }/character/changesortid?sort_id1=${"${sort_id[1]}"}&sort_id2=${"${sort_id[2]}"}'"></i>`;
-                        }
                         characterTh.html(html);
                     },
                     function () {
                         const characterTh = $(this);
-                        const character_id = $(this).attr("itemid");
                         $(this).html(`
                             <div class="character_name">${"${characterTh.attr('itemprop')}"}</div>
                             <div class="character_level">${"${characterTh.attr('value')}"}</div>`);
@@ -227,10 +215,8 @@
                 });
                 $("#memberOut").click(function (e) {
                     e.preventDefault();
-                    const c1 = confirm("회원탈퇴 하시겠습니까?");
-                    if (c1) {
-                        const c2 = confirm("정말로 회원탈퇴를 진행할까요?\n회원탈퇴는 되돌릴 수 없으며, 자동적으로 회원님의 데이터는 지워집니다.");
-                        if (c2) {
+                    if (confirm("회원탈퇴 하시겠습니까?")) {
+                        if (confirm("정말로 회원탈퇴를 진행할까요?\n회원탈퇴는 되돌릴 수 없으며, 자동적으로 회원님의 데이터는 지워집니다.")) {
                             alert("회원탈퇴 되셨습니다. 그동안 이용해주셔서 감사합니다.");
                             location.href = "${pageContext.request.contextPath}/member/out";
                         }
@@ -320,89 +306,121 @@
             });
         </script>
         <script>
-            // $(document).ready(function () {
-            //     let items = new Map();
-            //     // Sortable rows
-            //     $(".sorted_table").sortable({
-            //         containerSelector: "table",
-            //         itemPath: "> tbody",
-            //         itemSelector: "tr",
-            //         placeholder: '<tr class="placeholder"/>',
-            //     });
-            //     // Sortable column heads
-            //     var oldIndex, oldItemId;
-            //     $(".sorted_head tr").sortable({
-            //         // containerSelector == thead > tr
-            //         containerSelector: "tr",
-            //         // itemSelector == Dragable Element
-            //         itemSelector: "td",
-            //         // placeholder
-            //         placeholder: '<td class="placeholder"/>',
-            //         vertical: true,
-            //         // 들기
-            //         onDragStart: function ($item, container, _super) {
-            //             oldIndex = $item.index();
-            //             oldItemId = $item.attr("itemid");
-            //             $item.appendTo($item.parent());
-            //             _super($item, container);
-            //             console.log(oldIndex);
-            //         },
-            //         // 놓기
-            //         onDrop: function ($item, container, _super) {
-            //             var field,
-            //                 newIndex = $item.index();
-            //             console.log(newIndex);
-            //             if (newIndex != oldIndex) {
-            //                 $item
-            //                     .closest("table")
-            //                     .find("tbody tr")
-            //                     .each(function (i, row) {
-            //                         row = $(row);
-            //                         if (newIndex < oldIndex) {
-            //                             row.children().eq(newIndex).before(row.children()[oldIndex]);
-            //                         } else if (newIndex > oldIndex) {
-            //                             row.children().eq(newIndex).after(row.children()[oldIndex]);
-            //                         }
-            //                     });
-            //                 // 서버에 순서변경내용 저장 테스트
-            //                 const children = $item.parent().children(".character_name");
-            //                 children.each((index, element) => {
-            //                     element = $(element);
-            //                     element.attr("itemscope", index);
-            //                     items.set(element.attr("itemid"), element.attr("itemscope"));
-            //                     // items[element.attr("itemid")] = element.attr("itemscope");
-            //                 });
-            //                 console.log(items);
-            //                 $.ajax({
-            //                     type: "post",
-            //                     url: "${pageContext.request.contextPath}/character/sorting",
-            //                     data: items,
-            //                     success: function (response) {
-            //                         // console.log($.parseJSON(response));
-            //                         console.log("Ajax success!");
-            //                     },
-            //                 });
-            //                 // const items = $item.parent().children(".character_name");
-            //                 // const ids = items.each(() => {
-            //                 //     $(this).attr("itemid");
-            //                 // });
-            //                 // console.log(items);
-            //                 // console.log(ids);
-            //                 // const sort_id1 = $item.parent().children().eq(newIndex).attr("itemscope"),
-            //                 //     sort_id2 = $item.parent().children().eq(oldIndex).attr("itemscope");
-            //                 // console.log(sort_id1, sort_id2);
-            //                 // 테스트 끝
-            //             }
-            //             _super($item, container);
-            //         },
-            //     });
-            // });
+            $(document).ready(function () {
+                // // 행 드래그 드롭 순서변경
+                // $("table.record").sortable({
+                //     containerSelector: "table",
+                //     itemPath: "> tbody",
+                //     itemSelector: "tr",
+                //     placeholder: '<tr class="placeholder"/>',
+                //     onDragStart: function ($item, container, _super) {
+                //         console.log("Start");
+                //     },
+                //     // 놓기
+                //     onDrop: function ($item, container, _super) {
+                //         console.log("end");
+                //     },
+                // });
+                // 열 드래그 드롭 순서변경
+                var oldIndex, oldItemId;
+                $(".sorted_head tr").sortable({
+                    // containerSelector == thead > tr
+                    containerSelector: "tr",
+                    // itemSelector == Dragable Element
+                    itemSelector: "td",
+                    // placeholder
+                    placeholder: '<td class="placeholder"/>',
+                    vertical: true,
+                    // 들기
+                    onDragStart: function ($item, container, _super) {
+                        oldIndex = $item.index();
+                        oldItemId = $item.attr("itemid");
+                        $item.appendTo($item.parent());
+                        _super($item, container);
+                    },
+                    // 놓기
+                    onDrop: function ($item, container, _super) {
+                        var field,
+                            newIndex = $item.index();
+                        console.log(newIndex);
+                        if (newIndex != oldIndex) {
+                            $item
+                                .closest("table")
+                                .find("tbody tr")
+                                .each(function (i, row) {
+                                    row = $(row);
+                                    if (newIndex < oldIndex) {
+                                        row.children().eq(newIndex).before(row.children()[oldIndex]);
+                                    } else if (newIndex > oldIndex) {
+                                        row.children().eq(newIndex).after(row.children()[oldIndex]);
+                                    }
+                                });
+                            // 서버에 순서변경내용 저장
+                            const children = $item.parent().children(".character_name");
+                            children.each((index, element) => {
+                                element = $(element);
+                                element.attr("itemscope", index);
+                                $.ajax({
+                                    type: "post",
+                                    url: "${pageContext.request.contextPath}/character/sorting",
+                                    data: { character_id: element.attr("itemid"), sort_id: element.attr("itemscope") },
+                                    success: function (response) {
+                                        //
+                                    },
+                                });
+                            });
+                        }
+                        _super($item, container);
+                    },
+                });
+            });
         </script>
         <style>
-            .placeholder {
-                background-color: yellow;
-                border: 1px solid black;
+            /* .record tr {
+                cursor: pointer;
             }
+            .record tr.placeholder {
+                display: block;
+                background: red;
+                position: relative;
+                margin: 0;
+                padding: 0;
+                border: none;
+            }
+            .record tr.placeholder:before {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                border: 5px solid transparent;
+                border-left-color: red;
+                margin-top: -5px;
+                left: -15px;
+                border-right: none;
+            } */
+
+            /* 세로열 디자인 */
+            .record td.placeholder {
+                display: block;
+                background: red;
+                position: relative;
+                width: 0;
+                height: 0px;
+                margin: 0;
+                padding: 0;
+            }
+            .record td.placeholder:before {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                border: 5px solid transparent;
+                border-top-color: red;
+                top: -15px;
+                margin-left: -5px;
+                border-bottom: none;
+            }
+
             .dragged {
                 position: absolute;
                 top: 0;
@@ -541,7 +559,7 @@
                                         <c:forEach var="c" items="${characterList}">
                                             <c:set var="disabled" value="${c.character_level<dh.homework_level?'disabled':''}" />
                                             <td>
-                                                <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}>
+                                                <!-- <input type="checkbox" id="h_${dh.homework_id}_c_${c.character_id}" ${disabled}> -->
                                             </td>
                                         </c:forEach>
                                     </tr>
@@ -559,7 +577,7 @@
                                         <c:forEach var="c" items="${characterList}">
                                             <c:set var="disabled" value="${c.character_level<wh.homework_level?'disabled':''}" />
                                             <td>
-                                                <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}>
+                                                <!-- <input type="checkbox" id="h_${wh.homework_id}_c_${c.character_id}" ${disabled}> -->
                                             </td>
                                         </c:forEach>
                                     </tr>
